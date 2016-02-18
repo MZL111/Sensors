@@ -34,25 +34,54 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            System.out.println("传感器：" + s.getName());
 //        }
 
-        //获取距离传感器
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        //注册传感器监听事件，
-        // SENSOR_DELAY_NORMAL:传输速度是普通模式
-        sensorManager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         switch(event.sensor.getType()){
             case Sensor.TYPE_PROXIMITY:
+                //输出距离传感器的值
                 System.out.println(event.values[0]);
                 break;
-
+            case Sensor.TYPE_ACCELEROMETER:
+                //输出加速传感器坐标
+                System.out.format("x=%f,y=%f,z=%f\n",event.values[0],event.values[1],event.values[2]);
+                break;
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        /**
+         * 注册传感器
+         */
+
+        //获取距离传感器
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        //注册传感器监听事件，
+        // SENSOR_DELAY_NORMAL:传输速度是普通模式
+        sensorManager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_NORMAL);
+
+        //获取加速传感器
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        /**
+         * 注销传感器
+         */
+        //注销所有传感器
+        sensorManager.unregisterListener(this);
     }
 }
