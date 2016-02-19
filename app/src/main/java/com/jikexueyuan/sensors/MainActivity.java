@@ -10,7 +10,7 @@ import android.os.Bundle;
 import java.util.List;
 
 /**
- *  距离传感器
+ *  传感器
  */
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
@@ -47,6 +47,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 //输出加速传感器坐标
                 System.out.format("x=%f,y=%f,z=%f\n",event.values[0],event.values[1],event.values[2]);
                 break;
+            case Sensor.TYPE_ORIENTATION:
+//                手机头指向北的时候数据是0
+                System.out.format("value:%f\n",event.values[0]);
         }
     }
 
@@ -72,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //获取加速传感器
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+        //获取方向传感器 orientation
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        sensorManager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -81,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         /**
          * 注销传感器
          */
-        //注销所有传感器
         sensorManager.unregisterListener(this);
     }
 }
